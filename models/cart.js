@@ -2,22 +2,34 @@ const fs = require('fs');
 const path = require('path');
 
 const p = path.join(
-        path.dirname(require.main.filename),
-        'data',
-        'cart.json'
+    path.dirname(require.main.filename),
+    'data',
+    'cart.json'
 );
 
-module.exports = class Cart {
-    static addProduct(id, productPrice) {
-        fs.readFile(p, (err, fileContent) => {
+const getCartFromFile = cb => {
+    fs.readFile(p, (err, fileContent) => {
+        if (err) {
             let cart = {products: [], totalPrice: 0};
-            if (!err) {
-                cart = JSON.parse(fileContent);
-            }
+            cb(cart);
+        } else {
+            cb(JSON.parse(fileContent));
+        }
+    });
+};
+
+module.exports = class Cart {
+
+    static fetchAll(cb) {
+        getCartFromFile(cb);
+    }
+
+    static addProduct(id, productPrice) {
+        getCartFromFile(cart => {
             // Analize the cart and find existing product
+            let updatedProduct;
             const existingProductIndex = cart.products.findIndex(prod => prod.id === id);
             const existingProduct = cart.products[existingProductIndex];
-            let updatedProduct;
             if (existingProduct) {
                 updatedProduct = {...existingProduct};
                 updatedProduct.quantity = updatedProduct.quantity + 1;
@@ -31,6 +43,20 @@ module.exports = class Cart {
             fs.writeFile(p, JSON.stringify(cart), err => {
                 console.log(err);
             });
-        })
+        });
+    }
+
+    static deleteProduct(id, productPrice) {
+        getCartFromFile(cart => {
+            const indexToDelete = cart.products.findIndex(prod => prod.id === id);
+            const productToKeep = cart.products.filter(prod => prod.id !== id);
+            if (indexToDelete != -1) {
+                cart.totalPrice = cart.totalPrice - (productPrice * cart.products[indexToDelete].quantity);
+                cart.products = [...productToKeep];
+                fs.writeFile(p, JSON.stringify(cart), err => {
+                    console.log(err);
+                });
+            }
+        });
     }
 }
