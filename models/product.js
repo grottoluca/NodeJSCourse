@@ -51,9 +51,16 @@ class Product {
             })
     }
 
-    static deleteById(prodId) {
+    static deleteById(prodId, userId) {
         const db = getDb();
         return db.collection('products').deleteOne({_id: new mongodb.ObjectId(prodId)})
+            .then(result => {
+                return db.collection('users').updateOne({
+                    _id: new mongodb.ObjectId(userId),
+                }, {
+                    $pull: {'cart.items': {'productId': new mongodb.ObjectId(prodId)}}
+                });
+            })
             .then(result => {
                 console.log("Deleted");
             })
