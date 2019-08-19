@@ -19,7 +19,7 @@ const userSchema = new Schema({
           ref: 'Product',
           required: true
         },
-        quantity: {type: Number, required: true}
+          quantity: {type: Number, required: true}
       }
     ]
   }
@@ -57,7 +57,7 @@ userSchema.methods.removeFromCart = function (productId) {
 };
 
 userSchema.methods.clearCart = function () {
-  this.cart = {items: []};
+    this.cart = {items: []};
   return this.save();
 };
 
