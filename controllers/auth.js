@@ -1,12 +1,23 @@
+const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 const crypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendGridTransport = require('nodemailer-sendgrid-transport');
 
 const User = require('../models/user');
 
+const p = path.join(
+  path.dirname(require.main.filename),
+  'data',
+  'token.json'
+);
+let rawApiData = fs.readFileSync(p);
+let API = JSON.parse(rawApiData);
+
 const transporter = nodemailer.createTransport(sendGridTransport({
   auth: {
-    api_key: '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'
+    api_key: API.sendGrid_API
   }
 }));
 
@@ -113,3 +124,51 @@ exports.postLogout = (req, res, next) => {
     res.redirect('/');
   });
 };
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/reset', {
+    path: '/reset',
+    pageTitle: 'Reset Passowrd',
+    errorMessage: message
+  });
+}
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          req.flash('error', 'No account with that mail found!');
+          return res.redirect('/reset');
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(result => {
+        res.redirect('/');
+        transporter.sendMail({
+          to: req.body.email,
+          from: 'shop@node.com',
+          subject: 'Password Reset',
+          html: `
+        <p>You request a password reset</p>
+        <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>
+        `
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  })
+}
