@@ -13,7 +13,7 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const MONGODB_URI =
-  'mongodb+srv://Luca:ker998ns@nodeecommerce-sl3pr.mongodb.net/shop?retryWrites=true&w=majority;
+  'mongodb+srv://Luca:ker998ns@nodeecommerce-sl3pr.mongodb.net/shop?retryWrites=true&w=majority';
 
 const app = express();
 const store = new MongoDBStore({
