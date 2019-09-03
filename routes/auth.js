@@ -23,10 +23,12 @@ router.post('/signup', [
                         return Promise.reject('Email already exist, please choose a different one');
                     }
                 });
-        }),
+        })
+        .normalizeEmail(),
     body('password', 'Please eneter an alphanumeric password that is 5 character long')
         .isLength({ min: 5 })
-        .isAlphanumeric(),
+        .isAlphanumeric()
+        .trim(),
     body('confirmPassword')
         .custom((value, { req }) => {
             if (value !== req.body.password) {
@@ -34,6 +36,7 @@ router.post('/signup', [
             }
             return true;
         })
+        .trim()
 ]
     , authController.postSignup);
 
