@@ -27,9 +27,11 @@
     "fsevents": "^2.0.7",
     "mongodb": "^3.1.6",
     "mongoose": "^5.2.17",
+    "multer": "^1.4.2",
     "mysql2": "^1.6.1",
     "nodemailer": "^6.3.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "pdfkit": "^0.10.0",
     "pug": "^2.0.3",
     "sequelize": "^5.0.0-beta.11"
   }
