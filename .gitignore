@@ -87,3 +87,6 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 data/token.json
+
+# Image folder
+/images
