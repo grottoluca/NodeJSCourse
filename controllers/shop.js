@@ -48,11 +48,12 @@ exports.getIndex = (req, res, next) => {
         .limit(ITEMS_PER_PAGE)
     })
     .then(products => {
-      res.render('shop/ index', {
+      res.render('shop/index', {
         prods: products,
         pageTitle: 'Shop',
         path: '/',
         totalProducts: totalItems,
+        currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalItems,
         hasPrevPage: page > 1,
         nextPage: page + 1,

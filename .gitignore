@@ -90,3 +90,6 @@ data/token.json
 
 # Image folder
 /images
+
+# Invoice folder
+/data
