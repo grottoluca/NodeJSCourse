@@ -93,3 +93,7 @@ data/token.json
 
 # Invoice folder
 /data
+
+# Certifcates
+server.cert
+server.key
