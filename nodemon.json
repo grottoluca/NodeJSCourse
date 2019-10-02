@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_USER": "Luca",
+    "MONGO_PW": "ker998ns",
+    "MONGO_DB": "shop"
+  }
+}
