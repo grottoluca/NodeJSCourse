@@ -2,6 +2,7 @@
   "env": {
     "MONGO_USER": "Luca",
     "MONGO_PW": "ker998ns",
-    "MONGO_DB": "shop"
+    "MONGO_DB": "shop",
+    "SENDGRID_API": "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"
   }
 }

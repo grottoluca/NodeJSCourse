@@ -8,17 +8,9 @@ const { validationResult } = require('express-validator/check');
 
 const User = require('../models/user');
 
-const p = path.join(
-  path.dirname(require.main.filename),
-  'data',
-  'token.json'
-);
-let rawApiData = fs.readFileSync(p);
-let API = JSON.parse(rawApiData);
-
 const transporter = nodemailer.createTransport(sendGridTransport({
   auth: {
-    api_key: API.sendGrid_API
+    api_key: process.env.SENDGRID_API
   }
 }));
 
